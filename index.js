@@ -16,6 +16,10 @@ let goalAmount = 0  //Insert your fundraising goal
 
 /*** Create & Initialize Tilitfy and DonorDrive information ***/
 client = new TiltifyClient(tiltifyToken)
+client.Campaigns.get(tilitifyCampaign, function (data) { 
+			tiltifyRaised = data.amountRaised 
+			console.log("Tiltify Initialized: $" + tiltifyRaised + " raised.")
+		})
 const basicInfo = 'https://www.extra-life.org/api/participants/' + participantID
 
 /*** Function to calculate total amounts raised from Tilitfy and DonorDrive ***/
@@ -34,11 +38,10 @@ function updateGoal(){
 		})
 		
 		if ( (body.sumDonations + tiltifyRaised) > totalRaised){
+			
 			totalRaised = body.sumDonations + tiltifyRaised
 			console.log("New donation(s) found! Total Raised: $" + totalRaised.toFixed(2))
-			
 			goalText = 'Goal: $' + totalRaised.toFixed(2) + ' / $' + goalAmount
-			
 			updateFiles(goalText)
 		}
 		else {
@@ -62,5 +65,5 @@ function updateFiles(updateStr){
 }
 
 /*** Run update function, polling every 60 seconds ***/
-updateGoal()
+//updateGoal()
 setInterval(updateGoal, 60000)
