@@ -8,9 +8,9 @@ NodeJS - https://nodejs.org/en/
 
 Once node JS is installed, you will need to enter the following in your command line to get needed additional packages:
 
-`npm i express
-npm i extra-life-api
-npm i --save tiltify-api-client`
+`npm i express`
+`npm i extra-life-api`
+`npm i tiltify-api-client`
 
 Extra Life API documentation: https://github.com/mririgoyen/extra-life
 
