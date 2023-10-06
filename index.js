@@ -1,69 +1,100 @@
-/*** Node Requirements ***/
-const request = require('request')
+/** Node Module Requirements **/
+const express = require('express')
 const fs = require('fs')
+const donorDrive = require('extra-life-api')
 const TiltifyClient = require("tiltify-api-client")
 
-/*** Variable Initialization ***/
-let outputString = ''
+let currentTotal = 0
 let tiltifyRaised = 0
-let totalRaised = 0
+let ddRaised = 0
+
+let hasTiltify = false
+let hasDD = false
 
 /*** INPUT YOUR INFORMATION BELOW ***/
+
+let participantID = 0 //Found in DonorDrive/Extra Life Page URL: https://www.extra-life.org/index.cfm?fuseaction=donorDrive.participant&participantID=[Your ID]
+
 let tiltifyToken = '' // Insert your access token from https://dashboard.tiltify.com/[your Tilitfy User Name]/my-account/connected-accounts/applications
-let tilitifyCampaign = '' // Insert your campaign ID, found at https://dashboard.tiltify.com/ndtex/[your Tilitfy User Name]/[your camapign name]/detail
-let participantID = '' //Found on your DonorDrive Extra Life URL: https://www.extra-life.org/index.cfm?fuseaction=donorDrive.participant&participantID=[PARTICIPANT_ID]
-let goalAmount = 0  //Insert your fundraising goal
+let tilitifyCampaign = '' // Insert your campaign ID, found at https://dashboard.tiltify.com/[your Tilitfy User Name]/[your camapign name]/detail
 
 /*** Create & Initialize Tilitfy and DonorDrive information ***/
-client = new TiltifyClient(tiltifyToken)
-client.Campaigns.get(tilitifyCampaign, function (data) { 
-			tiltifyRaised = data.amountRaised 
-			console.log("Tiltify Initialized: $" + tiltifyRaised + " raised.")
-		})
-const basicInfo = 'https://www.extra-life.org/api/participants/' + participantID
 
-/*** Function to calculate total amounts raised from Tilitfy and DonorDrive ***/
-function updateGoal(){
-	request({
-		url: basicInfo,
-		json: true
-	}, (error, response, body) => {
-		if (error || response.statusCode !== 200) {
-			console.log(`Error in updateGoal(): ${error} (status code ${response.statusCode})`)
-			return
-		}
-		
+if (tiltifyToken != '' && tilitifyCampaign != ''){
+	client = new TiltifyClient(tiltifyToken)
+	client.Campaigns.get(tilitifyCampaign, function (data) { 
+				tiltifyRaised = data.amountRaised 
+				console.log("Tiltify Initialized: $" + tiltifyRaised + " raised.")
+			})
+	hasTiltify = true
+}
+
+if (participantID != 0){
+	const basicInfo = 'https://www.extra-life.org/api/participants/' + participantID
+	hasDD = true
+}
+
+/** DonorDrive Total Request. Need to await as the API returns a promise. **/
+async function ddTotal(){
+	
+	try {
+		isInitialized()
+	}catch (error) {
+		console.log(error)
+	}
+	
+	var updateFile = false
+	
+	console.log(`Current total is: ${currentTotal}`)
+	
+	if (hasTiltify){
 		client.Campaigns.get(tilitifyCampaign, function (data) { 
-			tiltifyRaised = data.amountRaised 
+				tiltifyRaised = data.amountRaised 
+			})
+		}
+	
+	if (hasDD){
+		var result = await donorDrive.getUserInfo(participantID);
+	}
+	
+	if (currentTotal != result.sumDonations + tiltifyRaised){
+		
+		currentTotal = result.sumDonations + tiltifyRaised
+				
+		updateFile = true
+	}		
+	
+	if (updateFile){
+		
+		var jsonString = '{"currentTotal":' + currentTotal + '}'
+		
+		fs.writeFile('public/data.json', jsonString , (err) => {
+			if (err) {
+				console.log(`Error when saving donor-drive.js: ${err}`)
+				return
+			}
+
+			console.log('data.json Updated')
 		})
-		
-		if ( (body.sumDonations + tiltifyRaised) > totalRaised){
-			
-			totalRaised = body.sumDonations + tiltifyRaised
-			console.log("New donation(s) found! Total Raised: $" + totalRaised.toFixed(2))
-			goalText = 'Goal: $' + totalRaised.toFixed(2) + ' / $' + goalAmount
-			updateFiles(goalText)
-		}
-		else {
-			console.log("No new donations received.")
-		}
-		
-	})
+	}
+	
 }
 
-/*** Function Update Text Files ***/
-function updateFiles(updateStr){
-	fs.writeFile('output.txt', updateStr, (err) => {
-		if (err) {
-			console.log(`Error when saving Goal.txt: ${err}`)
-			return
-		}
+function isInitialized(){
 
-		console.log('Output Text File Updated')
-						
-	})
+	if (!(hasDD && hasTiltify)) {
+		
+		throw "Camapign information not initialized. Please check index.js for proper setup.\nPress CTRL+C to halt execution.\n"
+	
+	}
+	
 }
 
-/*** Run update function, polling every 60 seconds ***/
-//updateGoal()
-setInterval(updateGoal, 60000)
+ddTotal()
+setInterval(ddTotal,15000, currentTotal)
+
+/** Web Server **/
+var app = express()
+app.use(express.static('public'))
+
+var server = app.listen(3000)

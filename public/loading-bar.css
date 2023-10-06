@@ -1,0 +1,33 @@
+@font-face {
+    font-family: 'gilroyblack';
+    src: url('fonts/radomir_tinkov_-_gilroy-black-webfont.woff2') format('woff2'),
+         url('fonts/radomir_tinkov_-_gilroy-black-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+.ldBar {
+  position: relative;
+}
+
+.ldBar.label-center > .ldBar-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -webkit-text-stroke: 1px black;
+  transform: translate(-50%, -50%);
+  text-shadow: 2px 2px 2px black;
+  font-family: "gilroyblack", Arial, sans-serif;
+  color: white;
+}
+
+.ldBar .ldBar-label:after {
+  content: " / $UNITIALIZED"; /* Insert Your Campaign Total Here */
+  display: inline;
+}
+
+.ldBar-label:before {
+  content: "$";
+  display: inline;
+}
