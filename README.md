@@ -13,6 +13,7 @@ npm i extra-life-api
 npm i --save tiltify-api-client`
 
 Extra Life API documentation: https://github.com/mririgoyen/extra-life
+
 Tiltify API documentation: https://github.com/daniellockard/tiltify-api-client
 
 ## Entering Your Information
