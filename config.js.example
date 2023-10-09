@@ -1,0 +1,9 @@
+const config = {
+    port: 3000,
+    refreshInterval: 15000,
+    ddParticipantId: 0,
+    tiltifyToken: '',
+    tiltifyCampaign: ''
+}
+
+export default config

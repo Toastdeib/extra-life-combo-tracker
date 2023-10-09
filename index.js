@@ -1,100 +1,81 @@
 /** Node Module Requirements **/
-const express = require('express')
-const fs = require('fs')
-const donorDrive = require('extra-life-api')
-const TiltifyClient = require("tiltify-api-client")
+import config from './config.js'
+import express from 'express'
+import fs from 'fs'
+import { getUserInfo } from 'extra-life-api'
+import TiltifyClient from 'tiltify-api-client'
+
+const DEFAULT_PORT = 3000
+const DEFAULT_REFRESH = 15000
 
 let currentTotal = 0
 let tiltifyRaised = 0
 let ddRaised = 0
 
+let client
 let hasTiltify = false
-let hasDD = false
+let hasDd = false
 
-/*** INPUT YOUR INFORMATION BELOW ***/
-
-let participantID = 0 //Found in DonorDrive/Extra Life Page URL: https://www.extra-life.org/index.cfm?fuseaction=donorDrive.participant&participantID=[Your ID]
-
-let tiltifyToken = '' // Insert your access token from https://dashboard.tiltify.com/[your Tilitfy User Name]/my-account/connected-accounts/applications
-let tilitifyCampaign = '' // Insert your campaign ID, found at https://dashboard.tiltify.com/[your Tilitfy User Name]/[your camapign name]/detail
-
-/*** Create & Initialize Tilitfy and DonorDrive information ***/
-
-if (tiltifyToken != '' && tilitifyCampaign != ''){
-	client = new TiltifyClient(tiltifyToken)
-	client.Campaigns.get(tilitifyCampaign, function (data) { 
-				tiltifyRaised = data.amountRaised 
-				console.log("Tiltify Initialized: $" + tiltifyRaised + " raised.")
-			})
-	hasTiltify = true
+// Check for config information and initialize the Tilitfy client if info is present
+if (config.tiltifyToken && config.tiltifyCampaign) {
+    client = new TiltifyClient(config.tiltifyToken)
+    client.Campaigns.get(config.tiltifyCampaign, (data) => {
+        tiltifyRaised = data.amountRaised
+        console.log('Tiltify Initialized: $' + tiltifyRaised + ' raised.')
+    })
+    hasTiltify = true
 }
 
-if (participantID != 0){
-	const basicInfo = 'https://www.extra-life.org/api/participants/' + participantID
-	hasDD = true
+if (config.ddParticipantId) {
+    hasDd = true
 }
 
-/** DonorDrive Total Request. Need to await as the API returns a promise. **/
-async function ddTotal(){
-	
-	try {
-		isInitialized()
-	}catch (error) {
-		console.log(error)
-	}
-	
-	var updateFile = false
-	
-	console.log(`Current total is: ${currentTotal}`)
-	
-	if (hasTiltify){
-		client.Campaigns.get(tilitifyCampaign, function (data) { 
-				tiltifyRaised = data.amountRaised 
-			})
-		}
-	
-	if (hasDD){
-		var result = await donorDrive.getUserInfo(participantID);
-	}
-	
-	if (currentTotal != result.sumDonations + tiltifyRaised){
-		
-		currentTotal = result.sumDonations + tiltifyRaised
-				
-		updateFile = true
-	}		
-	
-	if (updateFile){
-		
-		var jsonString = '{"currentTotal":' + currentTotal + '}'
-		
-		fs.writeFile('public/data.json', jsonString , (err) => {
-			if (err) {
-				console.log(`Error when saving donor-drive.js: ${err}`)
-				return
-			}
+/**
+ * Fetches the latest donation totals from each configured platform, aggregates the value, and stores it
+ * in the data file if it's changed since the previous check.
+ */
+async function updateTotal() {
+    if (!isInitialized()) {
+        console.log('At least one donation source needs to be initialized')
+        process.exit(0)
+        return
+    }
 
-			console.log('data.json Updated')
-		})
-	}
-	
+    if (hasTiltify) {
+        // TODO - This isn't synchronous, so it'll probably be on a 1-cycle update delay from the EL data
+        client.Campaigns.get(config.tiltifyCampaign, (data) => {
+            tiltifyRaised = data.amountRaised
+        })
+    }
+
+    if (hasDd) {
+        const result = await getUserInfo(config.ddParticipantId)
+        ddRaised = result.sumDonations
+    }
+
+    if (currentTotal !== ddRaised + tiltifyRaised) {
+        currentTotal = ddRaised + tiltifyRaised
+        fs.writeFile('public/data.json', JSON.stringify({ currentTotal: currentTotal }), (err) => {
+            if (err) {
+                console.log(`Error when saving donor-drive.js: ${err}`)
+                return
+            }
+
+            console.log('data.json Updated')
+        })
+    }
+
+    console.log(`Current total is: ${currentTotal}`)
 }
 
-function isInitialized(){
-
-	if (!(hasDD && hasTiltify)) {
-		
-		throw "Camapign information not initialized. Please check index.js for proper setup.\nPress CTRL+C to halt execution.\n"
-	
-	}
-	
+function isInitialized() {
+    return hasTiltify || hasDd
 }
 
-ddTotal()
-setInterval(ddTotal,15000, currentTotal)
+updateTotal()
+setInterval(updateTotal, config.refreshInterval ?? DEFAULT_REFRESH)
 
 /** Web Server **/
-var app = express()
+const app = express()
 app.use(express.static('public'))
-
-var server = app.listen(3000)
+app.listen(config.port ?? DEFAULT_PORT)
