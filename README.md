@@ -14,6 +14,7 @@ Extra Life API documentation can be found [here](https://github.com/mririgoyen/e
 To configure the application, you'll need to create a copy of [config.js.example](config.js.example), rename it to `config.js`, and update the fields within with actual values:
 
 * `port` - the port that the app is served up on (default: 3000)
+* `certPath` - a path containing the `privkey.pem`, `cert.pem`, and `chain.pem` files for an SSL certificate; this field is **optional** in case you'd like to run the application from an actual webserver over HTTPS, if you're running it locally you can omit the field and it will serve up over HTTP instead
 * `refreshInterval` - the interval at which the app polls the API and updates the progress bar in milliseconds (default: 15000)
 * `ddParticipantId` - your DonorDrive participant ID, if you have one; this can be found in your DonorDrive/Extra Life page URL (https://www.extra-life.org/index.cfm?fuseaction=donorDrive.participant&participantID=[Your ID])
 * `tiltifyToken` - your Tiltify access token, if you have one; this can be found in your Tiltify dashboard (https://dashboard.tiltify.com/[your Tilitfy User Name]/my-account/connected-accounts/applications)
