@@ -23,7 +23,6 @@
 }
 
 .ldBar .ldBar-label:after {
-  content: " / $UNITIALIZED"; /* Insert Your Campaign Total Here */
   display: inline;
 }
 

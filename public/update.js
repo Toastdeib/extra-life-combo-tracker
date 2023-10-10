@@ -1,12 +1,12 @@
-export function updateBar(bar) {
+function updateBar() {
     $.getJSON('data.json', (data) => {
-        const items = []
-        $.each(data, (key, val) => {
-            items.push(val)
-        })
-        console.log(items)
-        console.log(`Current total pulled is: ${items[0]}`)
-
+        console.log(`Updating current total to ${data.currentTotal}`)
         bar.set(data.currentTotal)
     })
 }
+
+const bar = new ldBar('.ldBar', { max: window.donationTarget })
+updateBar()
+setInterval(updateBar, window.updateInterval)
+
+document.styleSheets[0].addRule('.ldBar .ldBar-label:after', `content: " / $${window.donationTarget}"`)

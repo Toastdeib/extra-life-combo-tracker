@@ -15,14 +15,17 @@ To configure the application, you'll need to create a copy of [config.js.example
 
 * `port` - the port that the app is served up on (default: 3000)
 * `certPath` - a path containing the `privkey.pem`, `cert.pem`, and `chain.pem` files for an SSL certificate; this field is **optional** in case you'd like to run the application from an actual webserver over HTTPS, if you're running it locally you can omit the field and it will serve up over HTTP instead
-* `refreshInterval` - the interval at which the app polls the API and updates the progress bar in milliseconds (default: 15000)
+* `refreshInterval` - the interval at which the app polls the APIs and updates the progress bar in milliseconds (default: 15000)
 * `ddParticipantId` - your DonorDrive participant ID, if you have one; this can be found in your DonorDrive/Extra Life page URL (https://www.extra-life.org/index.cfm?fuseaction=donorDrive.participant&participantID=[Your ID])
 * `tiltifyToken` - your Tiltify access token, if you have one; this can be found in your Tiltify dashboard (https://dashboard.tiltify.com/[your Tilitfy User Name]/my-account/connected-accounts/applications)
 * `tiltifyCampaign` - your Tiltify campaign ID, if you have one; this can be found in your Tiltify campaign dashboard (https://dashboard.tiltify.com/[your Tilitfy User Name]/[your camapign name]/detail)
 
 Note: You **must** configure the fields for at least one of the two sources (DonorDrive and Tiltify) for the application to function. If both are populated, it aggregates the values across both.
 
-In addition to setting the configs, you'll need to update both index.html and loading-bar.css to add in your fundraising goal in the place of `$UNINITIALIZED`. This will be moved to the config file as well in a future push.
+Additionally, you'll need to create a copy of the [config.js.example](public/config.js.example) file in the `public` folder, rename it to `config.js`, and adjust the fields in there if desired:
+
+* `donationTarget` - your donation target in dollars
+* `refreshInterval` - the interval at which the bar refreshes itself in milliseconds; the value in the example file is 1000 for historical reasons, but in practice can be as high as the `refreshInterval` for the APIs in the other config file
 
 ## Running the Program
 On your command line, go to the directory where you downloaded index.js (e.g. cd c:\"Extra Life") and run the following command:

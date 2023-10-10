@@ -2,25 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-	<link rel="stylesheet" type="text/css" href="/loading-bar.css" />
-	<script src="jquery-3.6.3.min.js"></script>
-	<script type="text/javascript" src="/loading-bar.js"></script>
+    <link rel="stylesheet" type="text/css" href="/loading-bar.css" />
+    <script src="jquery-3.6.3.min.js"></script>
+    <script type="text/javascript" src="/loading-bar.js"></script>
+    <script src="/config.js"></script>
+    <script type="module" src="/update.js"></script>
     <title>Extra Life Tracker</title>
   </head>
-	<body>
-	
-	<p>UNITIALIZED. Please edit index.html, set the data-max attribute in the div tag with your campaign total. Repeat this step for loading-bar.css in the ".ldBar .ldBar-label:after" class. Further information on loading bar sytling <a href="https://loading.io/progress/">can be found here</a>. Feel free to delete this paragraph block after.</p>
-	
-	<div class="ldBar label-center" data-preset="stripe" data-min="0" data-max="UNITIALIZED" data-aspect-ratio="none" data-precision="0.01" style="width:400px;height:50px"></div>
-	
-  	<script type="module">
-		import {updateBar} from "./update.js";
-		var bar = new ldBar(".ldBar");
-		var barType1 = "current"
-		updateBar(bar);
-		setInterval(updateBar, 1000, bar);
-	</script>
-	
-	
+  <body>
+    <div class="ldBar label-center" data-preset="stripe" data-min="0" data-aspect-ratio="none" data-precision="0.01" style="width:400px;height:50px"></div>
   </body>
 </html>
