@@ -22,12 +22,13 @@ if (config.tiltifyToken && config.tiltifyCampaign) {
     client = new TiltifyClient(config.tiltifyToken);
     client.Campaigns.get(config.tiltifyCampaign, (data) => {
         tiltifyRaised = data.amountRaised;
-        console.log('Tiltify Initialized: $' + tiltifyRaised + ' raised.');
+        console.log('Tiltify initialized');
     });
     hasTiltify = true;
 }
 
 if (config.ddParticipantId) {
+    console.log('DonorDrive initialized');
     hasDd = true;
 }
 
@@ -58,7 +59,7 @@ async function updateTotal() {
         currentTotal = ddRaised + tiltifyRaised;
         fs.writeFile('public/data.json', JSON.stringify({ currentTotal: currentTotal }), (err) => {
             if (err) {
-                console.log(`Error when saving donor-drive.js: ${err}`);
+                console.log(`Error when saving data.json: ${err}`);
                 return;
             }
 
@@ -66,7 +67,7 @@ async function updateTotal() {
         });
     }
 
-    console.log(`Current total is: ${currentTotal}`);
+    console.log(`Current total: $${currentTotal}`);
 }
 
 function isInitialized() {
