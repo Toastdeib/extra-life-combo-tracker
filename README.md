@@ -16,9 +16,9 @@ To configure the application, you'll need to create a copy of [config.js.example
 * `port` - the port that the app is served up on (default: 3000)
 * `certPath` - a path containing the `privkey.pem`, `cert.pem`, and `chain.pem` files for an SSL certificate; this field is **optional** in case you'd like to run the application from an actual webserver over HTTPS, if you're running it locally you can omit the field and it will serve up over HTTP instead
 * `apiRefreshInterval` - the interval at which the app polls the APIs and updates the progress bar in milliseconds (default: 15000)
-* `ddParticipantId` - your DonorDrive participant ID, if you have one; this can be found in your DonorDrive/Extra Life page URL (https://www.extra-life.org/index.cfm?fuseaction=donorDrive.participant&participantID=[Your ID])
-* `tiltifyToken` - your Tiltify access token, if you have one; this can be found in your Tiltify dashboard (https://dashboard.tiltify.com/[your Tilitfy User Name]/my-account/connected-accounts/applications)
-* `tiltifyCampaign` - your Tiltify campaign ID, if you have one; this can be found in your Tiltify campaign dashboard (https://dashboard.tiltify.com/[your Tilitfy User Name]/[your camapign name]/detail)
+* `ddParticipantId` - your DonorDrive participant ID, if you have one; this can be found in your DonorDrive/Extra Life page URL (`https://www.extra-life.org/index.cfm?fuseaction=donorDrive.participant&participantID=[Your ID]`)
+* `tiltifyToken` - your Tiltify access token, if you have one; this can be found in your Tiltify dashboard (`https://dashboard.tiltify.com/[your Tilitfy User Name]/my-account/connected-accounts/applications`)
+* `tiltifyCampaign` - your Tiltify campaign ID, if you have one; this can be found in your Tiltify campaign dashboard (`https://dashboard.tiltify.com/[your Tilitfy User Name]/[your camapign name]/detail`)
 * `donationTarget` - your donation target in dollars
 * `barRefreshInterval` - the interval at which the bar refreshes itself in milliseconds; the value in the example file is 1000 for historical reasons, but in practice can be as high as the `apiRefreshInterval` field
 
