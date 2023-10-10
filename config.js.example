@@ -5,6 +5,6 @@ const config = {
     ddParticipantId: 0,
     tiltifyToken: '',
     tiltifyCampaign: ''
-}
+};
 
-export default config
+export default config;

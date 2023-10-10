@@ -1,2 +1,2 @@
-window.donationTarget = 1000
-window.updateInterval = 1000
+window.donationTarget = 1000;
+window.updateInterval = 1000;

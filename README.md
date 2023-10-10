@@ -20,7 +20,7 @@ To configure the application, you'll need to create a copy of [config.js.example
 * `tiltifyToken` - your Tiltify access token, if you have one; this can be found in your Tiltify dashboard (https://dashboard.tiltify.com/[your Tilitfy User Name]/my-account/connected-accounts/applications)
 * `tiltifyCampaign` - your Tiltify campaign ID, if you have one; this can be found in your Tiltify campaign dashboard (https://dashboard.tiltify.com/[your Tilitfy User Name]/[your camapign name]/detail)
 
-Note: You **must** configure the fields for at least one of the two sources (DonorDrive and Tiltify) for the application to function. If both are populated, it aggregates the values across both.
+Note: You **must** configure the fields for at least one of the two sources (DonorDrive and Tiltify) for the application to function. If all three fields are populated, it aggregates the values across both.
 
 Additionally, you'll need to create a copy of the [config.js.example](public/config.js.example) file in the `public` folder, rename it to `config.js`, and adjust the fields in there if desired:
 

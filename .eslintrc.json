@@ -16,7 +16,7 @@
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
-    "ignorePatterns": [ "**/public/*" ],
+    "ignorePatterns": [ "**/public/lib/*" ],
     "rules": {
         "brace-style": [
             "error",
@@ -64,8 +64,7 @@
             "error"
         ],
         "linebreak-style": [
-            "error",
-            "windows"
+            "error"
         ],
         "newline-per-chained-call": [
             "error",
@@ -117,8 +116,7 @@
             "error"
         ],
         "semi": [
-            "error",
-            "never"
+            "error"
         ],
         "semi-spacing": [
             "error"
