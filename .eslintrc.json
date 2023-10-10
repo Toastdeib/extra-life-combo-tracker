@@ -16,7 +16,7 @@
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
-    "ignorePatterns": [ "**/public/lib/*" ],
+    "ignorePatterns": [ "**/public/*" ],
     "rules": {
         "brace-style": [
             "error",
