@@ -76,6 +76,14 @@ function isInitialized() {
 
 updateTotal();
 setInterval(updateTotal, config.refreshInterval ?? DEFAULT_REFRESH);
+fs.writeFile('public/config.js', `window.donationTarget = ${config.donationTarget}; window.barRefreshInterval = ${config.barRefreshInterval};`, (err) => {
+    if (err) {
+        console.log(`Error when creating public/config.js: ${err}`);
+        return;
+    }
+
+    console.log('public/config.js written');
+});
 
 /** Web Server **/
 const port = config.port ?? DEFAULT_PORT;

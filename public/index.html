@@ -16,7 +16,7 @@
 
             const bar = new ldBar('.ldBar', { max: window.donationTarget });
             updateBar();
-            setInterval(updateBar, window.updateInterval);
+            setInterval(updateBar, window.barRefreshInterval);
 
             document.styleSheets[0].addRule('.ldBar .ldBar-label:after', `content: " / $${window.donationTarget}"`);
         </script>
