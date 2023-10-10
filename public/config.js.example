@@ -1,0 +1,2 @@
+window.donationTarget = 1000
+window.updateInterval = 1000
