@@ -4,31 +4,19 @@ import express from 'express';
 import fs from 'fs';
 import { getUserInfo } from 'extra-life-api';
 import https from 'https';
-import TiltifyClient from 'tiltify-api-client';
 
 const DEFAULT_PORT = 3000;
 const DEFAULT_REFRESH = 15000;
 
-let currentTotal = 0;
-let tiltifyRaised = 0;
-let ddRaised = 0;
-
-let client;
-let hasTiltify = false;
+const currentTotals = {};
 let hasDd = false;
 
-// Check for config information and initialize the Tilitfy client if info is present
-if (config.tiltifyToken && config.tiltifyCampaign) {
-    client = new TiltifyClient(config.tiltifyToken);
-    client.Campaigns.get(config.tiltifyCampaign, (data) => {
-        tiltifyRaised = data.amountRaised;
-        console.log('Tiltify initialized');
-    });
-    hasTiltify = true;
-}
-
-if (config.ddParticipantId) {
+if (config.ddParticipantIdList.length > 0) {
     console.log('DonorDrive initialized');
+    for (const id of config.ddParticipantIdList) {
+        currentTotals[id] = 0;
+    }
+
     hasDd = true;
 }
 
@@ -36,46 +24,38 @@ if (config.ddParticipantId) {
  * Fetches the latest donation totals from each configured platform, aggregates the value, and stores it
  * in the data file if it's changed since the previous check.
  */
-async function updateTotal() {
-    if (!isInitialized()) {
-        console.log('At least one donation source needs to be initialized');
+async function updateTotals() {
+    if (!hasDd) {
+        console.log('At least one donation ID needs to be initialized');
         process.exit(0);
         return;
     }
 
-    if (hasTiltify) {
-        // TODO - This isn't synchronous, so it'll probably be on a 1-cycle update delay from the EL data
-        client.Campaigns.get(config.tiltifyCampaign, (data) => {
-            tiltifyRaised = data.amountRaised;
-        });
+    let totalChanged = false;
+    for (const id of Object.keys(currentTotals)) {
+        const result = await getUserInfo(id);
+        if (currentTotals[id] !== result.sumDonations) {
+            currentTotals[id] = result.sumDonations;
+            totalChanged = true;
+        }
     }
 
-    if (hasDd) {
-        const result = await getUserInfo(config.ddParticipantId);
-        ddRaised = result.sumDonations;
-    }
-
-    if (currentTotal !== ddRaised + tiltifyRaised) {
-        currentTotal = ddRaised + tiltifyRaised;
-        fs.writeFile('public/data.json', JSON.stringify({ currentTotal: currentTotal }), (err) => {
+    if (totalChanged) {
+        fs.writeFile('public/data-multi.json', JSON.stringify(currentTotals), (err) => {
             if (err) {
-                console.log(`Error when saving data.json: ${err}`);
+                console.log(`Error when saving data-multi.json: ${err}`);
                 return;
             }
 
-            console.log('data.json updated');
+            console.log('data-multi.json updated');
         });
     }
 
-    console.log(`Current total: $${currentTotal}`);
+    console.log('Totals fetched');
 }
 
-function isInitialized() {
-    return hasTiltify || hasDd;
-}
-
-updateTotal();
-setInterval(updateTotal, config.refreshInterval ?? DEFAULT_REFRESH);
+updateTotals();
+setInterval(updateTotals, config.refreshInterval ?? DEFAULT_REFRESH);
 fs.writeFile('public/config.js', `window.donationTarget = ${config.donationTarget}; window.barRefreshInterval = ${config.barRefreshInterval};`, (err) => {
     if (err) {
         console.log(`Error when creating public/config.js: ${err}`);

@@ -1,0 +1,13 @@
+const config = {
+    port: 3000,
+    certPath: '',
+    apiRefreshInterval: 15000,
+    ddParticipantId: 0,
+    ddParticipantIdList: [],
+    tiltifyToken: '',
+    tiltifyCampaign: '',
+    donationTarget: 1000,
+    barRefreshInterval: 1000
+};
+
+export default config;
