@@ -14,7 +14,18 @@
                 });
             }
 
-            const bar = new ldBar('.ldBar', { max: window.donationTarget });
+            const queryParams = new URLSearchParams(window.location.search);
+            const primaryColor = queryParams.get('primaryColor');
+            const secondaryColor = queryParams.get('secondaryColor');
+
+            const opts = {
+                max: window.donationTarget
+            };
+            if (primaryColor && secondaryColor) {
+                opts.fill = `data:ldbar/res,stripe(#${primaryColor},#${secondaryColor},1)`;
+            }
+
+            const bar = new ldBar('.ldBar', opts);
             updateBar();
             setInterval(updateBar, window.barRefreshInterval);
 

@@ -9,7 +9,7 @@
         <script type="module">
             function updateBar() {
                 $.getJSON('data-multi.json', (data) => {
-                    console.log(`Updating current total to $${data.currentTotal}`);
+                    console.log(`Updating current total to $${data[id]}`);
                     bar.set(data[id]);
                 });
             }
@@ -17,7 +17,17 @@
             const queryParams = new URLSearchParams(window.location.search);
             const id = queryParams.get('id');
             const donationTarget = queryParams.get('target') ?? window.donationTarget;
-            const bar = new ldBar('.ldBar', { max: donationTarget });
+            const primaryColor = queryParams.get('primaryColor');
+            const secondaryColor = queryParams.get('secondaryColor');
+
+            const opts = {
+                max: donationTarget
+            };
+            if (primaryColor && secondaryColor) {
+                opts.fill = `data:ldbar/res,stripe(#${primaryColor},#${secondaryColor},1)`;
+            }
+
+            const bar = new ldBar('.ldBar', opts);
             updateBar();
             setInterval(updateBar, window.barRefreshInterval);
 

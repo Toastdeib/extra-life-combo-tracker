@@ -38,5 +38,7 @@ If you'd like to run this application to support multiple DonorDrive IDs, you'll
 
 This version of the application is intended to be hosted on a proper webserver. It should be viewed via the /index-multi.html page on whatever domain and port you choose, and expects an `id` to be passed in the query string which **must** be one of the IDs in the ID list in the configs. It also supports a `target` query parameter, which sets the donation target for displaying the progress bar.
 
+For additional customization, *both* versions of the page support the query string parameters `primaryColor` and `secondaryColor`. If using them, **both** parameters are required and must be formatted as 3- or 6-character hex color codes without the # (e.g. `primaryColor=ffffff&secondaryColor=999999`). The tracker bar will use the colors specified by the parameters and default to the standard blue stripes if the parameters are omitted.
+
 ## Feedback
 You can ping me @ndtex on the Extra Life Discord in the #tiltify-support channel. Enjoy the application? Consider a donation to my [Extra Life campaign](https://gamin4aven.com)!
