@@ -34,4 +34,4 @@ The code will run on its own. Basic console information will output to show the 
 For additional customization, the page supports the query string parameters `primaryColor` and `secondaryColor`. If using them, **both** parameters are required and must be formatted as 3- or 6-character hex color codes without the # (e.g. `primaryColor=ffffff&secondaryColor=999999`). The tracker bar will use the colors specified by the parameters and default to the standard blue stripes if the parameters are omitted.
 
 ## Feedback
-You can ping me @ndtex on the Extra Life Discord in the #tiltify-support channel. Enjoy the application? Consider a donation to my [Extra Life campaign](https://gamin4aven.com)!
+You can ping me @ndtex on the Extra Life Discord in the #tiltify-support channel. Enjoy the application? Consider a donation to my [Extra Life campaign](https://gamin4aven.com) or to Toastdeib, who helped me a ton with code refactoring and cleanup, [at his Extra Life campign](https://www.extra-life.org/index.cfm?fuseaction=donordrive.participant&participantID=514246).
